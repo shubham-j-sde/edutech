@@ -2,8 +2,8 @@ import json
 import requests
 from html.parser import HTMLParser
 
-dictword = {}
-# tags = set()
+dictword = {}                           #stores required words with occurance
+
 
 class MyHTMLParser(HTMLParser):
               
@@ -12,17 +12,15 @@ class MyHTMLParser(HTMLParser):
         self.tag = tag
 
     def handle_starttag(self, tag, attrs):
-        self.tag = str(tag)
+        self.tag = str(tag)              #stores tags
 
     def handle_data(self, data):
         if (data.isspace()):
             return
-        # global tags
-        # tags.add(self.tag)
-        if(self.tag!="script"):
+        if(self.tag!="script"):          #words we need are except script part
             words = str(data).split()
             for w in words:
-                if w.isalpha():
+                if w.isalnum():          #word assumed to be Alpha-numeric
                     global dictword
                     if w in dictword:
                         dictword[w] += 1
@@ -37,7 +35,7 @@ def main():
     parser = MyHTMLParser()
     parser.feed(webUrl)
     
-    result = open("result2.json","w+")
+    result = open("result.json","w+")
     y= json.dumps(dictword)
     if result.mode=='w+':
         result.write(y)
